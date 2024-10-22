@@ -1,0 +1,6 @@
+.env
+app/
+__pycache__/
+.pytest_cache
+last
+temp.py

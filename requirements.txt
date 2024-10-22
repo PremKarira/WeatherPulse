@@ -1,0 +1,7 @@
+Flask
+pymongo
+python-dotenv
+requests
+schedule
+pytest
+pytest-mock

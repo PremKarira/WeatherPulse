@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Monitoring Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Weather Monitoring Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <section class="controls">
+            <form action="/run_weather_monitor" method="POST">
+                <button type="submit" class="btn">Run Weather Monitoring</button>
+            </form>
+            <form action="/run_daily_summary" method="POST">
+                <button type="submit" class="btn">Generate Daily Summary</button>
+            </form>
+        </section>
+        
+
+        <section class="date-display">
+            <p>Next automatic weather monitoring in: <strong>{{ time_left_monitor // 60 }} minutes</strong></p>
+            <p>Next automatic daily summary in: <strong>{{ time_left_summary // 3600 }} hours</strong></p>
+        </section>
+        <br><br>
+        <section class="summary">
+            <h2>Daily Weather Summary</h2>
+            <form action="/get_summary" method="POST" class="date-form">
+                <div class="form-group">
+                    <label for="date">Select Date:</label>
+                    <input type="date" id="date" name="date" required class="date-input">
+                </div>
+                <button type="submit" class="btn">Get Summary</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>City</th>
+                        <th>Average Temperature (°C)</th>
+                        <th>Max Temperature (°C)</th>
+                        <th>Min Temperature (°C)</th>
+                        <th>Dominant Weather</th>
+                        <th>Record Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if summary %}
+                        {% for city, data in summary.cities.items() %}
+                            <tr>
+                                <td>{{ city }}</td>
+                                <td>{{ data.average_temp }}</td>
+                                <td>{{ data.max_temp }}</td>
+                                <td>{{ data.min_temp }}</td>
+                                <td>{{ data.dominant_weather }}</td>
+                                <td>{{ data.record_count }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">No summary available.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>
